@@ -1,0 +1,518 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "BreakerService",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Supplier batches",
+      "description": "Actions related to supplier batches on the Breaker"
+    },
+    {
+      "name": "Breaker status",
+      "description": "Actions related to the Breaker status"
+    }
+  ],
+  "servers": [
+  ],
+  "paths": {
+  },
+  "components": {
+    "schemas": {
+      "SupplierBatch": {
+        "type": "object",
+        "description": "Supplierbatch object posted from Breaker Service",
+        "required": [
+          "erpId",
+          "eggItId"
+        ],
+        "properties": {
+          "machineInfo": {
+            "type": "string",
+            "example": "OptiBreaker xx no. yyy",
+            "description": "Machinetype and machinenumber",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "94d6c1f0-71e6-11e7-8cf7-a6006ad3dba0",
+            "description": "The internal ID of the supplier batch, leave empty if you want it to be auto-generated"
+          },
+          "erpId": {
+            "type": "string",
+            "example": "20000000000647",
+            "description": "The external ID of the supplier batch."
+          },
+          "eggItId": {
+            "type": "string",
+            "example": "73",
+            "description": "Readable text or barcode on the EGG-it ID Egg"
+          },
+          "receptionDate": {
+            "readOnly": true,
+            "type": "string",
+            "format": "date",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}",
+            "description": "The date that the batch has been received in Breaker",
+            "example": "2017-05-23"
+          },
+          "supplier": {
+            "$ref": "#/components/schemas/Supplier"
+          },
+          "status": {
+            "readOnly": true,
+            "type": "string",
+            "example": "FINISHED",
+            "description": "The status of the batch (NEW, IN PRODUCTION, ABORTED, FINISHED)",
+            "default": "NEW",
+            "enum": [
+              "NEW",
+              "IN_PRODUCTION",
+              "ABORTED",
+              "FINISHED"
+            ]
+          },
+          "results": {
+            "$ref": "#/components/schemas/BreakerResults"
+          },
+          "auditLog": {
+            "$ref": "#/components/schemas/AuditLog"
+          }
+        }
+      },
+      "Supplier": {
+        "type": "object",
+        "properties": {
+          "erpId": {
+            "type": "string",
+            "example": "2323234234",
+            "description": "The external ID of the supplier"
+          },
+          "producerCode": {
+            "type": "string",
+            "example": "X-NL-4004-XX",
+            "description": "Identification of supplier"
+          },
+          "name": {
+            "type": "string",
+            "example": "Egg farmer 1",
+            "description": "The name of the supplier"
+          },
+          "city": {
+            "type": "string",
+            "example": "Amsterdam",
+            "description": "The city of the supplier"
+          }
+        }
+      },
+      "AuditLog": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "time": {
+              "type": "string",
+              "example": "2017-09-14T14:05:22Z",
+              "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
+              "readOnly": true
+            },
+            "change": {
+              "type": "object",
+              "readOnly": true,
+              "additionalProperties": {
+                "type": "string",
+                "example": {
+                  "status": "NEW"
+                }
+              }
+            }
+          }
+        },
+        "example": [
+          {
+            "time": "2017-09-14T14:05:22Z",
+            "change": {
+              "status": "NEW"
+            }
+          },
+          {
+            "time": "2017-09-14T14:06:22Z",
+            "change": {
+              "status": "IN_PRODUCTION"
+            }
+          },
+          {
+            "time": "2017-09-14T14:10:33Z",
+            "change": {
+              "status": "FINISHED"
+            }
+          }
+        ],
+        "readOnly": true
+      },
+      "BreakerResults": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
+            "example": "2017-09-14T14:06:22Z",
+            "description": "Time when batch started on Breaker",
+            "readOnly": true
+          },
+          "endDate": {
+            "type": "string",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
+            "example": "2017-09-14T14:10:33Z",
+            "description": "Time when batch ended on Breaker",
+            "readOnly": true
+          },
+          "duration": {
+            "type": "integer",
+            "example": 3600,
+            "description": "Total time in seconds that batch ran on Breaker",
+            "readOnly": true
+          },
+          "amountOfLoadedEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Loaded eggs to Breaker infeed",
+            "readOnly": true
+          },
+          "amountOfLoadedCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Loaded cases to Breaker infeed",
+            "readOnly": true
+          },
+          "amountOfFeededEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Feeded eggs to Breaker",
+            "readOnly": true
+          },
+          "amountOfFeededCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Feeded cases to Breaker",
+            "readOnly": true
+          },
+          "amountOfDiffLoadedFeededEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of difference Loaded/Feeded eggs",
+            "readOnly": true
+          },
+          "amountOfDiffLoadedFeededCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of difference Loaded/Feeded cases",
+            "readOnly": true
+          },
+          "percentageOfLoadedFeeded": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of Feeded eggs in reference to Loaded eggs",
+            "readOnly": true
+          },
+          "amountOfBrokenEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Broken eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfBrokenCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Broken cases in Breaker",
+            "readOnly": true
+          },
+          "amountOfWholeEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of WholeEgg eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfWholeEggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of WholeEgg cases in Breaker",
+            "readOnly": true
+          },
+          "percentageOfWholeEggs": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of WholeEggs",
+            "readOnly": true
+          },
+          "amountOfCat3Eggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Cat3 eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfCat3EggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Cat3 cases in Breaker",
+            "readOnly": true
+          },
+          "percentageOfCat3Eggs": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of Cat3 eggs",
+            "readOnly": true
+          },
+          "amountOfBadEggEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Bad eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfBadEggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Bad cases in Breaker",
+            "readOnly": true
+          },
+          "amountOfTotalLossEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Total loss of eggs",
+            "readOnly": true
+          },
+          "amountOfTotalLossCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Total loss of cases",
+            "readOnly": true
+          }
+        }
+      },
+      "BreakerProductionData": {
+        "type": "object",
+        "description": "ProductionData object posted from Breaker Service",
+        "properties": {
+          "machineInfo": {
+            "type": "string",
+            "example": "OptiBreaker xx no. yyy",
+            "description": "Machinetype and machinenumber",
+            "readOnly": true
+          },
+          "totalOpearationHours": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Total lifetime machine operation hours",
+            "readOnly": true
+          },
+          "productionTime": {
+            "type": "string",
+            "pattern": "\\d*:\\d{2}:\\d{2}",
+            "example": "12:45:32",
+            "description": "Production time since reset HH:mm:ss",
+            "readOnly": true
+          },
+          "cipTime": {
+            "type": "string",
+            "pattern": "\\d*:\\d{2}:\\d{2}",
+            "example": "12:45:32",
+            "description": "Cip time since reset HH:mm:ss",
+            "readOnly": true
+          },
+          "stopTime": {
+            "type": "string",
+            "pattern": "\\d*:\\d{2}:\\d{2}",
+            "example": "12:45:32",
+            "description": "Stop time since reset HH:mm:ss",
+            "readOnly": true
+          },
+          "amountOfLoadedEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Loaded eggs to Breaker infeed",
+            "readOnly": true
+          },
+          "amountOfLoadedCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Loaded cases to Breaker infeed",
+            "readOnly": true
+          },
+          "amountOfFeededEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Feeded eggs to Breaker",
+            "readOnly": true
+          },
+          "amountOfFeededCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Feeded cases to Breaker",
+            "readOnly": true
+          },
+          "amountOfDiffLoadedFeededEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of difference Loaded/Feeded eggs",
+            "readOnly": true
+          },
+          "amountOfDiffLoadedFeededCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of difference Loaded/Feeded cases",
+            "readOnly": true
+          },
+          "percentageOfLoadedFeeded": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of Feeded eggs in reference to Loaded eggs",
+            "readOnly": true
+          },
+          "amountOfBrokenEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Broken eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfBrokenCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Broken cases in Breaker",
+            "readOnly": true
+          },
+          "amountOfWholeEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of WholeEgg eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfWholeEggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of WholeEgg cases in Breaker",
+            "readOnly": true
+          },
+          "percentageOfWholeEggs": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of WholeEggs",
+            "readOnly": true
+          },
+          "amountOfCat3Eggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Cat3 eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfCat3EggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Cat3 cases in Breaker",
+            "readOnly": true
+          },
+          "percentageOfCat3Eggs": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of Cat3 eggs",
+            "readOnly": true
+          },
+          "amountOfBadEggEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Bad eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfBadEggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Bad cases in Breaker",
+            "readOnly": true
+          },
+          "amountOfTotalLossEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Total loss of eggs",
+            "readOnly": true
+          },
+          "amountOfTotalLossCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Total loss of cases",
+            "readOnly": true
+          }
+        }
+      },
+      "MachineState": {
+        "type": "object",
+        "description": "MachineState object posted from Breaker Service",
+        "properties": {
+          "machineInfo": {
+            "type": "string",
+            "example": "OptiBreaker xx no. yyy",
+            "description": "Machinetype and machinenumber",
+            "readOnly": true
+          },
+          "machineType": {
+            "type": "string",
+            "example": "Breaker",
+            "description": "Machinetype (Breaker, Loader)",
+            "enum": [
+              "Breaker",
+              "Loader"
+            ],
+            "readOnly": true
+          },
+          "logDateTime": {
+            "type": "string",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
+            "example": "2017-09-14T14:06:22Z",
+            "description": "Time when log is created",
+            "readOnly": true
+          },
+          "machineMode": {
+            "type": "string",
+            "example": "Production",
+            "description": "Machinestatus (Production, CIP)",
+            "enum": [
+              "Production",
+              "CIP"
+            ],
+            "readOnly": true
+          },
+          "machineStatus": {
+            "type": "string",
+            "example": "Started",
+            "description": "Machinestatus (Started, Stopped)",
+            "enum": [
+              "Started",
+              "Stopped"
+            ],
+            "readOnly": true
+          },
+          "alarmNo": {
+            "type": "integer",
+            "example": 36,
+            "description": "Alarm No from machineType",
+            "readOnly": true
+          },
+          "alarmText": {
+            "type": "string",
+            "example": "Emergency stop pressed",
+            "description": "Alarm text from machineType",
+            "readOnly": true
+          }
+        }
+      }
+    }
+  }
+}
+
+

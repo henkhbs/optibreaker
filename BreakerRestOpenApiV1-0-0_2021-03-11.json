@@ -1,0 +1,1123 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "BreakerREST",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Supplier batches",
+      "description": "Actions related to supplier batches on the Breaker"
+    },
+	  {
+      "name": "Breaker status",
+      "description": "Actions related to the Breaker status"
+    }
+  ],
+  "servers": [
+  ],
+  "paths": {
+    "/supplierbatches": {
+      "get": {
+        "tags": [
+          "Supplier batches"
+        ],
+        "summary": "Gets supplier batches based on the given query string",
+        "description": "Gets supplier batches based on the given query string",
+        "operationId": "getSupplierBatches",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start date for the start of range",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End date for the end of range",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "supplierErpId",
+            "in": "query",
+            "description": "Identifier of the supplier",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "erpId",
+            "in": "query",
+            "description": "The external ID of the supplier batch",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The query succeed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SupplierBatch"
+                      }
+                    }
+                  },
+                  "allOf": [
+                    { "$ref": "#/components/schemas/Errors" },
+                    { "$ref": "#/components/schemas/Warnings" }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The HTTP 400 Bad Request response status code indicates that the server could not understand the request due to invalid syntax. The client should not repeat this request without modification. Missing or invalid parameters will be noted in the error object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The HTTP 404 Not Found client error response code indicates that the server can't find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The HTTP 500 Internal Server Error response code indicates that the server could not handle request. For example encountered an unexpected condition which prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "The HTTP 504 Gateway Timeout server error response code indicates that the server is not ready to handle the request. For example when the server could not reach the PLC, this error is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Supplier batches"
+        ],
+        "summary": "Send a new supplier batch to the breaker",
+        "operationId": "postSupplierBatch",
+        "description": "You can send a new supplier batch to the breaker passing a valid supplier batch object",
+        "responses": {
+          "201": {
+            "description": "Supplier batch has been created and has been send to breaker",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SupplierBatch"
+                      }
+                    }
+                  },
+                  "allOf": [
+                    { "$ref": "#/components/schemas/Errors" },
+                    { "$ref": "#/components/schemas/Warnings" }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The HTTP 400 Bad Request response status code indicates that the server could not understand the request due to invalid syntax. The client should not repeat this request without modification. Missing or invalid parameters will be noted in the error object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The HTTP 500 Internal Server Error response code indicates that the server could not handle request. For example encountered an unexpected condition which prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "The HTTP 504 Gateway Timeout server error response code indicates that the server is not ready to handle the request. For example when the server could not reach the PLC, this error is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SupplierBatch"
+        }
+      }
+    },
+    "/supplierbatches/{id}": {
+      "get": {
+        "tags": [
+          "Supplier batches"
+        ],
+        "summary": "Get a supplier batches based on the id",
+        "description": "Gets supplier batches based on the given query string",
+        "operationId": "getSupplierBatchesById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifier of the supplier batch",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The query succeed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SupplierBatch"
+                      }
+                    }
+                  },
+                  "allOf": [
+                    { "$ref": "#/components/schemas/Errors" },
+                    { "$ref": "#/components/schemas/Warnings" }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The HTTP 400 Bad Request response status code indicates that the server could not understand the request due to invalid syntax. The client should not repeat this request without modification. Missing or invalid parameters will be noted in the error object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The HTTP 404 Not Found client error response code indicates that the server can't find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The HTTP 500 Internal Server Error response code indicates that the server could not handle request. For example encountered an unexpected condition which prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "The HTTP 504 Gateway Timeout server error response code indicates that the server is not ready to handle the request. For example when the server could not reach the PLC, this error is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Supplier batches"
+        ],
+        "summary": "Delete a supplier batch by providing an existing ID",
+        "description": "You can delete a supplier batch by providing an exisiting supplier batch ID",
+        "operationId": "deleteSupplierBatchById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Supplier batch ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Supplier batch is deleted"
+          },
+          "400": {
+            "description": "The HTTP 400 Bad Request response status code indicates that the server could not understand the request due to invalid syntax. The client should not repeat this request without modification. Missing or invalid parameters will be noted in the error object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The HTTP 404 Not Found client error response code indicates that the server can't find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The HTTP 500 Internal Server Error response code indicates that the server could not handle request. For example encountered an unexpected condition which prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "The HTTP 504 Gateway Timeout server error response code indicates that the server is not ready to handle the request. For example when the server could not reach the PLC, this error is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultSupplierBatch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+	  "/breakerstatus/productiondata": {
+      "get": {
+        "tags": [
+          "Breaker status"
+        ],
+        "summary": "Gets breaker general production data",
+        "description": "Gets breaker general production data",
+        "operationId": "getBreakerPorductionData",
+        "responses": {
+          "200": {
+            "description": "The query succeed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/BreakerProductionData"
+                    }
+                  },
+                  "allOf": [
+                    { "$ref": "#/components/schemas/Errors" },
+                    { "$ref": "#/components/schemas/Warnings" }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The HTTP 400 Bad Request response status code indicates that the server could not understand the request due to invalid syntax. The client should not repeat this request without modification. Missing or invalid parameters will be noted in the error object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultBreaker"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The HTTP 404 Not Found client error response code indicates that the server can't find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultBreaker"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The HTTP 500 Internal Server Error response code indicates that the server could not handle request. For example encountered an unexpected condition which prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultBreaker"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "The HTTP 504 Gateway Timeout server error response code indicates that the server is not ready to handle the request. For example when the server could not reach the PLC, this error is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultBreaker"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+	  "/breakerstatus/worstknifes": {
+      "get": {
+        "tags": [
+          "Breaker status"
+        ],
+        "summary": "Gets breaker top10 worst knifes",
+        "description": "Gets breaker top10 worst knifes",
+        "operationId": "getBreakerWorstKnifes",
+        "responses": {
+          "200": {
+            "description": "The query succeed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "result": {
+                      "$ref": "#/components/schemas/BreakerWorstKnifes"
+                    }
+                  },
+                  "allOf": [
+                    { "$ref": "#/components/schemas/Errors" },
+                    { "$ref": "#/components/schemas/Warnings" }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The HTTP 400 Bad Request response status code indicates that the server could not understand the request due to invalid syntax. The client should not repeat this request without modification. Missing or invalid parameters will be noted in the error object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultBreaker"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The HTTP 404 Not Found client error response code indicates that the server can't find the requested resource.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultBreaker"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The HTTP 500 Internal Server Error response code indicates that the server could not handle request. For example encountered an unexpected condition which prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultBreaker"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "The HTTP 504 Gateway Timeout server error response code indicates that the server is not ready to handle the request. For example when the server could not reach the PLC, this error is returned.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResultBreaker"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "requestBodies": {
+      "SupplierBatch": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SupplierBatch"
+            }
+          }
+        },
+        "description": "Model of the supplier batch to send"
+      }
+    },
+    "schemas": {
+      "ErrorResultSupplierBatch": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "errors": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "warnings": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ErrorResultBreaker": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object"
+          },
+          "errors": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "warnings": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SupplierBatch": {
+        "type": "object",
+        "required": [
+          "erpId",
+          "eggItId"
+        ],
+        "properties": {
+		      "machineInfo": {
+            "type": "string",
+            "example": "OptiBreaker xx no. yyy",
+            "description": "Machinetype and machinenumber",
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "94d6c1f0-71e6-11e7-8cf7-a6006ad3dba0",
+            "description": "The internal ID of the supplier batch, leave empty if you want it to be auto-generated"
+          },
+          "erpId": {
+            "type": "string",
+            "example": "20000000000647",
+            "description": "The external ID of the supplier batch."
+          },
+          "eggItId": {
+            "type": "string",
+            "example": "73",
+            "description": "Readable text or barcode on the EGG-it ID Egg"
+          },
+          "receptionDate": {
+            "readOnly": true,
+            "type": "string",
+            "format": "date",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}",
+            "description": "The date that the batch has been received in Breaker",
+            "example": "2017-05-23"
+          },
+          "supplier": {
+            "$ref": "#/components/schemas/Supplier"
+          },
+          "status": {
+            "readOnly": true,
+            "type": "string",
+            "example": "FINISHED",
+            "description": "The status of the batch (NEW, IN PRODUCTION, ABORTED, FINISHED)",
+            "default": "NEW",
+            "enum": [
+              "NEW",
+              "IN_PRODUCTION",
+              "ABORTED",
+              "FINISHED"
+            ]
+          },
+          "results": {
+            "$ref": "#/components/schemas/BreakerResults"
+          },
+          "auditLog": {
+            "$ref": "#/components/schemas/AuditLog"
+          }
+        }
+      },
+      "Supplier": {
+        "type": "object",
+        "properties": {
+          "erpId": {
+            "type": "string",
+            "example": "2323234234",
+            "description": "The external ID of the supplier"
+          },
+          "producerCode": {
+            "type": "string",
+            "example": "X-NL-4004-XX",
+            "description": "Identification of supplier"
+          },
+          "name": {
+            "type": "string",
+            "example": "Egg farmer 1",
+            "description": "The name of the supplier"
+          },
+          "city": {
+            "type": "string",
+            "example": "Amsterdam",
+            "description": "The city of the supplier"
+          }
+        }
+      },
+      "AuditLog": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "time": {
+              "type": "string",
+              "example": "2017-09-14T14:05:22Z",
+              "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
+              "readOnly": true
+            },
+            "change": {
+              "type": "object",
+              "readOnly": true,
+              "additionalProperties": {
+                "type": "string",
+                "example": {
+                  "status": "NEW"
+                }
+              }
+            }
+          }
+        },
+        "example": [
+          {
+            "time": "2017-09-14T14:05:22Z",
+            "change": {
+              "status": "NEW"
+            }
+          },
+          {
+            "time": "2017-09-14T14:06:22Z",
+            "change": {
+              "status": "IN_PRODUCTION"
+            }
+          },
+          {
+            "time": "2017-09-14T14:10:33Z",
+            "change": {
+              "status": "FINISHED"
+            }
+          }
+        ],
+        "readOnly": true
+      },
+      "BreakerResults": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
+            "example": "2017-09-14T14:06:22Z",
+            "description": "Time when batch started on Breaker",
+            "readOnly": true
+          },
+          "endDate": {
+            "type": "string",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z",
+            "example": "2017-09-14T14:10:33Z",
+            "description": "Time when batch ended on Breaker",
+            "readOnly": true
+          },
+          "duration": {
+            "type": "integer",
+            "example": 3600,
+            "description": "Total time in seconds that batch ran on Breaker",
+            "readOnly": true
+          },
+          "amountOfLoadedEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Loaded eggs to Breaker infeed",
+            "readOnly": true
+          },
+          "amountOfLoadedCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Loaded cases to Breaker infeed",
+            "readOnly": true
+          },
+          "amountOfFeededEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Feeded eggs to Breaker",
+            "readOnly": true
+          },
+          "amountOfFeededCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Feeded cases to Breaker",
+            "readOnly": true
+          },
+          "amountOfDiffLoadedFeededEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of difference Loaded/Feeded eggs",
+            "readOnly": true
+          },
+          "amountOfDiffLoadedFeededCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of difference Loaded/Feeded cases",
+            "readOnly": true
+          },
+          "percentageOfLoadedFeeded": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of Feeded eggs in reference to Loaded eggs",
+            "readOnly": true
+          },
+          "amountOfBrokenEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Broken eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfBrokenCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Broken cases in Breaker",
+            "readOnly": true
+          },
+          "amountOfWholeEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of WholeEgg eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfWholeEggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of WholeEgg cases in Breaker",
+            "readOnly": true
+          },
+          "percentageOfWholeEggs": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of WholeEggs",
+            "readOnly": true
+          },
+          "amountOfCat3Eggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Cat3 eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfCat3EggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Cat3 cases in Breaker",
+            "readOnly": true
+          },
+          "percentageOfCat3Eggs": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of Cat3 eggs",
+            "readOnly": true
+          },
+          "amountOfBadEggEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Bad eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfBadEggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Bad cases in Breaker",
+            "readOnly": true
+          },
+          "amountOfTotalLossEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Total loss of eggs",
+            "readOnly": true
+          },
+          "amountOfTotalLossCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Total loss of cases",
+            "readOnly": true
+          }
+        }
+      },
+      "BreakerProductionData": {
+        "type": "object",
+        "properties": {
+		      "machineInfo": {
+            "type": "string",
+            "example": "OptiBreaker xx no. yyy",
+            "description": "Machinetype and machinenumber",
+            "readOnly": true
+          },
+          "totalOpearationHours": {
+            "type": "integer",            
+            "example": 10000,
+            "description": "Total lifetime machine operation hours",
+            "readOnly": true
+          },
+          "productionTime": {
+            "type": "string", 
+			      "pattern": "\\d*:\\d{2}:\\d{2}",
+            "example": "12:45:32",
+            "description": "Production time since reset HH:mm:ss",
+            "readOnly": true
+          },
+		      "cipTime": {
+            "type": "string", 
+			       "pattern": "\\d*:\\d{2}:\\d{2}",
+            "example": "12:45:32",
+            "description": "Cip time since reset HH:mm:ss",
+            "readOnly": true
+          },
+		      "stopTime": {
+            "type": "string", 
+			      "pattern": "\\d*:\\d{2}:\\d{2}",
+            "example": "12:45:32",
+            "description": "Stop time since reset HH:mm:ss",
+            "readOnly": true
+          },
+          "amountOfLoadedEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Loaded eggs to Breaker infeed",
+            "readOnly": true
+          },
+          "amountOfLoadedCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Loaded cases to Breaker infeed",
+            "readOnly": true
+          },
+          "amountOfFeededEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Feeded eggs to Breaker",
+            "readOnly": true
+          },
+          "amountOfFeededCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Feeded cases to Breaker",
+            "readOnly": true
+          },
+          "amountOfDiffLoadedFeededEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of difference Loaded/Feeded eggs",
+            "readOnly": true
+          },
+          "amountOfDiffLoadedFeededCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of difference Loaded/Feeded cases",
+            "readOnly": true
+          },
+          "percentageOfLoadedFeeded": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of Feeded eggs in reference to Loaded eggs",
+            "readOnly": true
+          },
+          "amountOfBrokenEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Broken eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfBrokenCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Broken cases in Breaker",
+            "readOnly": true
+          },
+          "amountOfWholeEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of WholeEgg eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfWholeEggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of WholeEgg cases in Breaker",
+            "readOnly": true
+          },
+          "percentageOfWholeEggs": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of WholeEggs",
+            "readOnly": true
+          },
+          "amountOfCat3Eggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Cat3 eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfCat3EggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Cat3 cases in Breaker",
+            "readOnly": true
+          },
+          "percentageOfCat3Eggs": {
+            "type": "number",
+            "format": "float",
+            "example": 100.0,
+            "description": "Percentage of Cat3 eggs",
+            "readOnly": true
+          },
+          "amountOfBadEggEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Bad eggs in Breaker",
+            "readOnly": true
+          },
+          "amountOfBadEggCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Amount of Bad cases in Breaker",
+            "readOnly": true
+          },
+          "amountOfTotalLossEggs": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Total loss of eggs",
+            "readOnly": true
+          },
+          "amountOfTotalLossCases": {
+            "type": "integer",
+            "example": 10000,
+            "description": "Total loss of cases",
+            "readOnly": true
+          }
+        }
+      },
+	    "BreakerWorstKnifes": {
+        "type": "object",
+        "properties": {
+		      "machineInfo": {
+            "type": "string",
+            "example": "OptiBreaker xx no. yyy",
+            "description": "Machinetype and machinenumber",
+            "readOnly": true
+          },
+          "knifeWholeEggTotalAverage": {
+            "type": "integer",            
+            "example": 10000,
+            "description": "Total average whole eggs per knife",
+            "readOnly": true
+          },
+          "knifeCat3TotalAverage": {
+            "type": "integer",            
+            "example": 10000,
+            "description": "Total average cat3 per knife",
+            "readOnly": true
+          },
+          "top10WholeEggKnifes": {
+            "$ref": "#/components/schemas/BreakerWorstKnifesArr"
+          },
+          "top10Cat3Knifes": {
+            "$ref": "#/components/schemas/BreakerWorstKnifesArr"
+          },
+        }
+      },
+	    "BreakerWorstKnifesArr": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "row": {
+              "type": "integer",
+              "example": 1,
+              "description": "Row number",
+              "readOnly": true
+            },
+            "number": {
+              "type": "integer",
+              "example": 1,
+              "description": "Knife number in row",
+              "readOnly": true
+            },
+			      "count": {
+              "type": "integer",
+              "example": 1,
+              "description": "Actual knife count",
+              "readOnly": true
+            },
+          }
+        },
+        "example": [
+          {
+            "row": 1,
+            "number": 1,
+			      "count" : 500
+          },
+          {
+            "row": 5,
+            "number": 8,
+			      "count" : 450
+          },
+          {
+            "row": 2,
+            "number": 5,
+		        "count" : 400
+          },
+        ],
+        "readOnly": true
+      },
+	    "Errors": {
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "reasons": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Warnings": {
+        "properties": {
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "reasons": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
